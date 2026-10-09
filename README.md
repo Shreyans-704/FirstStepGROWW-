@@ -127,8 +127,6 @@ bun install
 bun run dev
 ```
 
-Open the printed local URL (typically http://localhost:8080/). If that port is occupied, Vite reports the next free port.
-
 | Task | Command |
 | --- | --- |
 | Development server | `bun run dev` |
