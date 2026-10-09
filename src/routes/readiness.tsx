@@ -4,6 +4,7 @@ import { ArrowRight, CheckCircle2, ChevronDown, CircleAlert, Sprout } from "luci
 import { PageTitle } from "@/components/Shell";
 import {
   EMERGENCY_MONTH_OPTIONS,
+  HORIZON_YEAR_OPTIONS,
   assessReadiness,
   inr,
   validateReadiness,
@@ -50,8 +51,14 @@ const fields: { k: Key; label: string; hint: string; prefix?: string; kind?: "se
     k: "horizonYears",
     label: "Investment time horizon (years)",
     hint: "When might you need this money?",
+    kind: "select",
   },
 ];
+
+const selectOptions: Record<string, readonly { value: string; label: string }[]> = {
+  emergencyMonths: EMERGENCY_MONTH_OPTIONS,
+  horizonYears: HORIZON_YEAR_OPTIONS,
+};
 
 const meta = {
   cushion: {
@@ -123,7 +130,7 @@ function Readiness() {
                   aria-describedby={errors[f.k] ? `${f.k}-err` : undefined}
                   onChange={(e) => setV({ ...v, [f.k]: e.target.value })}
                 >
-                  {EMERGENCY_MONTH_OPTIONS.map((o) => (
+                  {(selectOptions[f.k] ?? EMERGENCY_MONTH_OPTIONS).map((o) => (
                     <option key={o.label} value={o.value}>
                       {o.label}
                     </option>

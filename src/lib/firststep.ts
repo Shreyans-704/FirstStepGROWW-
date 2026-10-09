@@ -18,7 +18,8 @@ export function validateReadiness(i: Partial<Record<keyof ReadinessInput, string
   (["income", "expenses", "emi", "emergencyMonths", "horizonYears"] as const).forEach((k) => {
     const raw = i[k];
     if (raw === undefined || raw === "") {
-      errors[k] = k === "emergencyMonths" ? "Please select an option" : "Required";
+      errors[k] =
+        k === "emergencyMonths" || k === "horizonYears" ? "Please select an option" : "Required";
     } else if (!Number.isFinite(num(k)) || num(k) < 0) errors[k] = "Enter a number of 0 or more";
   });
   if (!errors.income && num("income") <= 0) errors.income = "Income must be more than ₹0";
@@ -45,6 +46,27 @@ export const EMERGENCY_MONTH_OPTIONS = [
 
 /** Map a dropdown value to months, or null when nothing is selected. */
 export function emergencyMonthsFromOption(value: string): number | null {
+  if (value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
+
+/** Dropdown options for investment horizon → numeric years used in calculations. */
+export const HORIZON_YEAR_OPTIONS = [
+  { value: "", label: "Select years" },
+  { value: "1", label: "1 year" },
+  { value: "2", label: "2 years" },
+  { value: "3", label: "3 years" },
+  { value: "5", label: "5 years" },
+  { value: "7", label: "7 years" },
+  { value: "10", label: "10 years" },
+  { value: "15", label: "15 years" },
+  { value: "20", label: "20 years" },
+  { value: "30", label: "30 years or more" },
+] as const;
+
+/** Map a dropdown value to years, or null when nothing is selected. */
+export function horizonYearsFromOption(value: string): number | null {
   if (value === "") return null;
   const n = Number(value);
   return Number.isFinite(n) && n >= 0 ? n : null;
