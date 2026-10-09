@@ -176,6 +176,38 @@ function Readiness() {
         </Link>
       </form>
 
+      <section aria-label="What the results mean" className="card mt-6 space-y-3 border">
+        <h2 className="text-sm font-semibold">What the 3 results mean</h2>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          <li className="flex gap-2">
+            <CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" aria-hidden="true" />
+            <span>
+              <strong className="text-foreground">Build a cushion first</strong> — nothing left
+              after expenses & EMIs, or emergency savings under 1 month, or EMIs over 50% of
+              income.
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <Sprout className="mt-0.5 h-4 w-4 shrink-0 text-[#5EEAD4]" aria-hidden="true" />
+            <span>
+              <strong className="text-foreground">Start tiny</strong> — emergency fund under 3
+              months, or EMIs over 30%, or horizon under 3 years, or surplus under ₹3,000 / 10%
+              of income. Try the ₹500 base.
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+            <span>
+              <strong className="text-foreground">Ready to plan</strong> — all basics met: 3+
+              months saved, EMIs in check, 3+ year horizon, and room to invest regularly.
+            </span>
+          </li>
+        </ul>
+        <p className="text-xs text-muted-foreground">
+          Prototype categories based on simple rules — not certified financial advice.
+        </p>
+      </section>
+
       {result &&
         (() => {
           const m = meta[result.outcome];
