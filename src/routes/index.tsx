@@ -7,10 +7,17 @@ import { usePlan } from "@/lib/usePlan";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "First Step — Your first investment should fit your life" },
-      { name: "description", content: "Understand your financial readiness and create a flexible plan." },
-      { property: "og:title", content: "First Step — Your first investment should fit your life" },
-      { property: "og:description", content: "A flexible first-investment planner for young Indians with irregular income. Educational prototype." },
+      { title: "First Step | Invest at Your Own Pace" },
+      {
+        name: "description",
+        content:
+          "A flexible first-investment planner for young Indians. Explore your financial readiness, simulate flexible SIP contributions, and build confidence before investing.",
+      },
+      { property: "og:title", content: "First Step | Invest at Your Own Pace" },
+      {
+        property: "og:description",
+        content: "A flexible first-investment planner built around your financial reality.",
+      },
     ],
   }),
   component: Welcome,

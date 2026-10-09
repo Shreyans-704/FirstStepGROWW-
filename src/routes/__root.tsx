@@ -51,17 +51,49 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "First Step — Your first investment, made flexible" },
-      { name: "description", content: "Educational prototype helping Gen Z investors check readiness and plan a flexible first SIP." },
+      { title: "First Step | Invest at Your Own Pace" },
+      {
+        name: "description",
+        content:
+          "A flexible first-investment planner for young Indians. Explore your financial readiness, simulate flexible SIP contributions, and build confidence before investing.",
+      },
+      { name: "theme-color", content: "#111111" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "First Step" },
+      { property: "og:title", content: "First Step | Invest at Your Own Pace" },
+      {
+        property: "og:description",
+        content: "A flexible first-investment planner built around your financial reality.",
+      },
+      { property: "og:url", content: "https://first-step-groww.vercel.app/" },
+      { property: "og:image", content: "https://first-step-groww.vercel.app/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: "First Step — a flexible first-investment planning experience.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "First Step | Invest at Your Own Pace" },
+      {
+        name: "twitter:description",
+        content:
+          "Explore your financial readiness and plan your first investment at your own pace.",
+      },
+      {
+        name: "twitter:image",
+        content: "https://first-step-groww.vercel.app/og-image.png",
+      },
     ],
     links: [
+      { rel: "canonical", href: "https://first-step-groww.vercel.app/" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,
