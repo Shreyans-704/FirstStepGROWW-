@@ -68,7 +68,7 @@ function Risk() {
       </section>
 
       <section className="card space-y-3">
-        <div className="flex items-center justify-between gap-2"><h2 className="font-bold">If the market fell…</h2><span className="rounded-md bg-warning-soft px-2 py-0.5 text-xs font-semibold text-warning">Illustrative only</span></div>
+        <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="font-bold">If the market fell…</h2><span className="rounded-md bg-warning-soft px-2 py-0.5 text-xs font-semibold text-warning">Illustrative scenario — not a prediction</span></div>
         <ul className="space-y-2">
           {falls.map((f) => {
             const shown = invested * (1 - f / 100);

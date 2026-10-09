@@ -66,8 +66,8 @@ function FlexSip() {
         <p className="text-sm text-accent-foreground">Planned monthly contribution</p>
         <p className="font-display text-3xl font-bold">{inr(base + optional)}</p>
         <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-          <div className="rounded-lg bg-background p-2.5"><p className="text-muted-foreground">Base · fixed</p><p className="font-semibold">{inr(base)}</p></div>
-          <div className="rounded-lg bg-background p-2.5"><p className="text-muted-foreground">Top-up · optional</p><p className="font-semibold">{inr(optional)}</p></div>
+          <div className="rounded-lg bg-secondary p-2.5"><p className="text-muted-foreground">Base · fixed</p><p className="font-semibold">{inr(base)}</p></div>
+          <div className="rounded-lg bg-secondary p-2.5"><p className="text-muted-foreground">Top-up · optional</p><p className="font-semibold">{inr(optional)}</p></div>
         </div>
       </section>
 
