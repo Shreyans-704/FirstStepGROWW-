@@ -20,7 +20,9 @@ function NotFoundComponent() {
       <div className="py-16 text-center">
         <h1 className="text-5xl font-bold">404</h1>
         <p className="mt-2 text-muted-foreground">This page doesn't exist.</p>
-        <Link to="/" className="btn btn-primary mt-6">Go home</Link>
+        <Link to="/" className="btn btn-primary mt-6">
+          Go home
+        </Link>
       </div>
     </Shell>
   );
@@ -36,10 +38,22 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold">This page didn't load</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Something went wrong. Try again or head home.</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Something went wrong. Try again or head home.
+        </p>
         <div className="mt-6 flex justify-center gap-2">
-          <button onClick={() => { router.invalidate(); reset(); }} className="btn btn-primary">Try again</button>
-          <a href="/" className="btn btn-outline">Go home</a>
+          <button
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
+            className="btn btn-primary"
+          >
+            Try again
+          </button>
+          <a href="/" className="btn btn-outline">
+            Go home
+          </a>
         </div>
       </div>
     </div>
@@ -57,7 +71,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "A flexible first-investment planner for young Indians. Explore your financial readiness, simulate flexible SIP contributions, and build confidence before investing.",
       },
-      { name: "theme-color", content: "#111111" },
+      { name: "theme-color", content: "#050807" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "First Step" },
       { property: "og:title", content: "First Step | Invest at Your Own Pace" },
@@ -89,7 +103,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "canonical", href: "https://first-step-groww.vercel.app/" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
+      },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
@@ -105,8 +122,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
     </html>
   );
 }
@@ -115,7 +137,9 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <Shell><Outlet /></Shell>
+      <Shell>
+        <Outlet />
+      </Shell>
     </QueryClientProvider>
   );
 }

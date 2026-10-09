@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
+  ArrowRight,
   CalendarDays,
   Check,
   Footprints,
+  Info,
   Lock,
   Pencil,
   Plus,
@@ -120,7 +122,7 @@ function MyPlan() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <PageTitle
         title="My first step"
         sub="Your saved flexible plan, its status and next contribution."
@@ -139,20 +141,27 @@ function MyPlan() {
       )}
 
       {!plan ? (
-        <section className="card space-y-3 py-10 text-center">
-          <Footprints className="mx-auto h-8 w-8 text-muted-foreground" />
-          <div>
-            <p className="font-semibold">No plan yet</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Build a Flex SIP to see your status, amounts and next contribution here.
-            </p>
+        <section className="overflow-hidden rounded-[20px] border border-white/10 bg-[#0A100E] px-6 py-10 text-center shadow-[0_32px_80px_-32px_rgb(0_0_0/0.8)] md:px-10 md:py-12">
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <Footprints className="h-6 w-6" aria-hidden="true" />
+          </span>
+          <h2 className="mx-auto mt-5 max-w-sm font-display text-2xl font-bold tracking-tight text-foreground">
+            Your plan starts here
+          </h2>
+          <p className="mx-auto mt-2 max-w-sm text-[15px] leading-relaxed text-muted-foreground">
+            Build a flexible SIP plan that fits your income, goals, and changing circumstances.
+          </p>
+          <div className="mx-auto mt-7 flex max-w-xs flex-col gap-2">
+            <Link to="/flex-sip" className="btn btn-primary w-full">
+              Build my plan <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <Link
+              to="/risk"
+              className="w-fit self-center px-2 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary"
+            >
+              Explore Growth Simulator
+            </Link>
           </div>
-          <Link to="/flex-sip" className="btn btn-primary mt-2 w-full">
-            Build my plan
-          </Link>
-          <Link to="/risk" className="btn btn-outline w-full">
-            Learn about risk first
-          </Link>
         </section>
       ) : (
         <>
@@ -258,7 +267,7 @@ function MyPlan() {
                 <Pencil className="h-4 w-4" /> Edit plan
               </Link>
               <Link to="/risk" className="btn btn-outline w-full">
-                <ShieldAlert className="h-4 w-4" /> Review risk in rupees
+                <ShieldAlert className="h-4 w-4" /> Explore growth scenarios
               </Link>
             </div>
             <div className="border-t pt-3">
@@ -299,20 +308,28 @@ function MyPlan() {
         </>
       )}
 
-      <section className="card space-y-2">
-        <h2 className="font-bold">Good to know</h2>
-        <p className="text-sm text-muted-foreground">
-          Keep the base small enough to pay in a bad month and treat the top-up as optional. An
-          emergency fund comes before investing — pausing here is a simulation and moves no real
-          money.
-        </p>
+      <section className="flex items-start gap-3 rounded-2xl border border-white/10 bg-surface/60 p-4">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+          <Info className="h-4 w-4" aria-hidden="true" />
+        </span>
+        <div>
+          <h2 className="font-display text-[17px] font-bold tracking-tight text-foreground">
+            Before you begin
+          </h2>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Keep your SIP affordable, maintain an emergency fund, and treat additional contributions
+            as optional. Your plan is a simulation — no real money moves through this page.
+          </p>
+        </div>
       </section>
 
       <form onSubmit={sendFeedback} noValidate className="card space-y-3" aria-label="Feedback">
         <div>
-          <h2 className="font-bold">Was this helpful?</h2>
+          <h2 className="font-display text-[17px] font-bold tracking-tight text-foreground">
+            Help us improve
+          </h2>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            Rate and comment. Stored on this device only — never sent to a server.
+            How useful was this experience?
             {fbCount !== null && fbCount > 0 ? ` ${fbCount} saved on this device.` : ""}
           </p>
         </div>
@@ -364,6 +381,9 @@ function MyPlan() {
         <button type="submit" className="btn btn-primary w-full">
           Save feedback on this device
         </button>
+        <p className="text-center text-xs text-muted-foreground">
+          Stored on this device only — never sent to a server.
+        </p>
       </form>
     </div>
   );

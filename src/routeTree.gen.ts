@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FlexSipRouteImport } from './routes/flex-sip'
-import { Route as HypeFilterRouteImport } from './routes/hype-filter'
 import { Route as MyPlanRouteImport } from './routes/my-plan'
 import { Route as ReadinessRouteImport } from './routes/readiness'
 import { Route as RiskRouteImport } from './routes/risk'
@@ -24,11 +23,6 @@ const IndexRoute = IndexRouteImport.update({
 const FlexSipRoute = FlexSipRouteImport.update({
   id: '/flex-sip',
   path: '/flex-sip',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HypeFilterRoute = HypeFilterRouteImport.update({
-  id: '/hype-filter',
-  path: '/hype-filter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyPlanRoute = MyPlanRouteImport.update({
@@ -50,7 +44,6 @@ const RiskRoute = RiskRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/flex-sip': typeof FlexSipRoute
-  '/hype-filter': typeof HypeFilterRoute
   '/my-plan': typeof MyPlanRoute
   '/readiness': typeof ReadinessRoute
   '/risk': typeof RiskRoute
@@ -58,7 +51,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/flex-sip': typeof FlexSipRoute
-  '/hype-filter': typeof HypeFilterRoute
   '/my-plan': typeof MyPlanRoute
   '/readiness': typeof ReadinessRoute
   '/risk': typeof RiskRoute
@@ -67,31 +59,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/flex-sip': typeof FlexSipRoute
-  '/hype-filter': typeof HypeFilterRoute
   '/my-plan': typeof MyPlanRoute
   '/readiness': typeof ReadinessRoute
   '/risk': typeof RiskRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    '/' | '/flex-sip' | '/hype-filter' | '/my-plan' | '/readiness' | '/risk'
+  fullPaths: '/' | '/flex-sip' | '/my-plan' | '/readiness' | '/risk'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/flex-sip' | '/hype-filter' | '/my-plan' | '/readiness' | '/risk'
-  id:
-    | '__root__'
-    | '/'
-    | '/flex-sip'
-    | '/hype-filter'
-    | '/my-plan'
-    | '/readiness'
-    | '/risk'
+  to: '/' | '/flex-sip' | '/my-plan' | '/readiness' | '/risk'
+  id: '__root__' | '/' | '/flex-sip' | '/my-plan' | '/readiness' | '/risk'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FlexSipRoute: typeof FlexSipRoute
-  HypeFilterRoute: typeof HypeFilterRoute
   MyPlanRoute: typeof MyPlanRoute
   ReadinessRoute: typeof ReadinessRoute
   RiskRoute: typeof RiskRoute
@@ -111,13 +93,6 @@ declare module '@tanstack/react-router' {
       path: '/flex-sip'
       fullPath: '/flex-sip'
       preLoaderRoute: typeof FlexSipRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hype-filter': {
-      id: '/hype-filter'
-      path: '/hype-filter'
-      fullPath: '/hype-filter'
-      preLoaderRoute: typeof HypeFilterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-plan': {
@@ -147,7 +122,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FlexSipRoute: FlexSipRoute,
-  HypeFilterRoute: HypeFilterRoute,
   MyPlanRoute: MyPlanRoute,
   ReadinessRoute: ReadinessRoute,
   RiskRoute: RiskRoute,

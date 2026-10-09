@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   EMERGENCY_MONTH_OPTIONS,
   addMonths,
-  analyzeClaim,
   assessReadiness,
   emergencyMonthsFromOption,
   nextContributionDate,
@@ -81,26 +80,6 @@ describe("pause/resume", () => {
   });
   it("base below ₹500 is invalid", () => {
     expect(validatePlan({ ...base, base: 400 })).not.toBeNull();
-  });
-});
-
-describe("hype filter", () => {
-  it("guarantee + pressure → avoid", () => {
-    expect(analyzeClaim("Guaranteed returns, join our telegram today only").verdict).toBe("avoid");
-  });
-  it("balanced explainer → learn", () => {
-    expect(
-      analyzeClaim(
-        "Mutual fund investments are subject to market risks, including possible loss. Read all scheme documents carefully on sebi.gov.in before investing over 5 years.",
-      ).verdict,
-    ).toBe("learn");
-  });
-  it("guarantee-only → caution", () => {
-    expect(
-      analyzeClaim(
-        "Fictional tip: earn guaranteed 5% returns every month with no risk and 100% sure-shot profits.",
-      ).verdict,
-    ).toBe("caution");
   });
 });
 

@@ -1,78 +1,72 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronRight, Gauge, Repeat, ShieldAlert, Search } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { Hero } from "@/components/landing/Hero";
+import { MutualFunds } from "@/components/landing/MutualFunds";
+import { Readiness } from "@/components/landing/Readiness";
+import { Showcase } from "@/components/landing/Showcase";
 import { StatusPill } from "@/components/Shell";
+import { SECTION_ANCHORS } from "@/config/site";
 import { fmtDate, inr, nextScheduled, planTotal } from "@/lib/firststep";
 import { usePlan } from "@/lib/usePlan";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "First Step | Invest at Your Own Pace" },
+      { title: "First Step | Your first investment should fit your life." },
       {
         name: "description",
         content:
-          "A flexible first-investment planner for young Indians. Explore your financial readiness, simulate flexible SIP contributions, and build confidence before investing.",
+          "Stocks, mutual funds and SIPs — understand how they work and build a money plan that fits your life. Free to explore, no account needed.",
       },
-      { property: "og:title", content: "First Step | Invest at Your Own Pace" },
+      { property: "og:title", content: "First Step | Your first investment should fit your life." },
       {
         property: "og:description",
-        content: "A flexible first-investment planner built around your financial reality.",
+        content: "The money playbook for your 20s. Build a money plan that fits your life.",
       },
     ],
   }),
-  component: Welcome,
+  component: Home,
 });
 
-const steps = [
-  { icon: Gauge, title: "Check readiness", text: "See if your money basics are in place.", to: "/readiness" },
-  { icon: Repeat, title: "Build a Flex SIP", text: "A small base, optional top-ups, pause when life happens.", to: "/flex-sip" },
-  { icon: ShieldAlert, title: "See risk in rupees", text: "What a bad stretch could look like, without jargon.", to: "/risk" },
-  { icon: Search, title: "Filter the hype", text: "Spot red flags in tips you get online.", to: "/hype-filter" },
-] as const;
-
-function Welcome() {
+function Home() {
   const { plan } = usePlan();
   return (
-    <div className="space-y-8">
-      <section className="pt-2">
-        <p className="mb-3 text-sm font-medium text-primary">For first-time investors, 20–26</p>
-        <h1 className="text-[2rem] font-bold leading-[1.15]">Your first investment should fit your life.</h1>
-        <p className="mt-3 text-lg text-muted-foreground">Understand your financial readiness and create a flexible plan.</p>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link to="/readiness" className="btn btn-primary sm:flex-1">Build my first plan <ArrowRight className="h-4 w-4" /></Link>
-          <a href="#how" className="btn btn-outline sm:flex-1">Explore how it works</a>
-        </div>
-        <p className="mt-3 text-sm text-muted-foreground">No login. Nothing leaves your device.</p>
-      </section>
+    <div id={SECTION_ANCHORS.top}>
+      <Hero />
 
       {plan && (
-        <Link to="/my-plan" className="card flex items-center justify-between gap-4 hover:border-primary">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2"><p className="text-sm text-muted-foreground">Your simulated plan</p><StatusPill status={plan.status} /></div>
-            <p className="mt-1 font-display text-2xl font-bold">{inr(planTotal(plan))}<span className="text-sm font-normal text-muted-foreground"> /month</span></p>
-            <p className="text-sm text-muted-foreground">Next: {fmtDate(nextScheduled(plan))}</p>
-          </div>
-          <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-        </Link>
+        <div className="mx-auto w-full max-w-7xl px-5 md:px-8">
+          <Link
+            to="/my-plan"
+            className="group mb-10 flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-surface/80 px-5 py-4 backdrop-blur transition-colors hover:border-primary/50"
+          >
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">Your simulated plan</p>
+                <StatusPill status={plan.status} />
+              </div>
+              <p className="mt-1 font-display text-2xl font-bold tracking-tight">
+                {inr(planTotal(plan))}
+                <span className="text-sm font-normal text-muted-foreground"> /month</span>
+              </p>
+              <p className="text-sm text-muted-foreground">Next: {fmtDate(nextScheduled(plan))}</p>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary">
+              Open plan{" "}
+              <ChevronRight
+                className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </span>
+          </Link>
+        </div>
       )}
 
-      <section id="how" className="scroll-mt-20">
-        <h2 className="mb-3 text-lg font-bold">How it works</h2>
-        <ol className="card divide-y p-0">
-          {steps.map((s, i) => (
-            <li key={s.title}>
-              <Link to={s.to} className="flex items-center gap-4 p-4 hover:bg-secondary">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-primary-soft text-primary"><s.icon className="h-5 w-5" /></span>
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold">{i + 1}. {s.title}</p>
-                  <p className="text-sm text-muted-foreground">{s.text}</p>
-                </div>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {/* Part 2 journey — hero and graph above are preserved untouched.
+          The Knowledge Hub now lives below the Growth Simulator on /risk. */}
+      <Readiness />
+      <Showcase />
+      <MutualFunds />
     </div>
   );
 }

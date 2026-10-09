@@ -2,7 +2,7 @@
 
 **Your first investment should fit your life.**
 
-First Step is an independent product-design prototype exploring how first-time investors can approach starting a SIP with more confidence and flexibility. It walks users through checking financial readiness, building a flexible "Safe-Start Flex SIP" plan, understanding risk in rupees, and filtering investment hype — all simulated locally in the browser.
+First Step is an independent product-design prototype exploring how first-time investors can approach starting a SIP with more confidence and flexibility. It walks users through checking financial readiness, building a flexible "Safe-Start Flex SIP" plan and understanding risk in rupees — all simulated locally in the browser.
 
 > **Educational prototype — not an official Groww product.** No real money moves here. No investment advice, no guaranteed returns, no real transactions.
 
@@ -45,7 +45,7 @@ These are framed as hypotheses explored by the prototype. The repository contain
 
 ## The product approach
 
-First Step's answer is the **Safe-Start Flex SIP** concept: readiness before commitment, flexibility over rigidity, and risk awareness over hype. The experience deliberately orders the journey — check readiness, then build a small flexible plan, then confront downside scenarios, then filter hype — so users encounter caution *before* they simulate committing money. Every simulation is labelled as such, and every limitation (keyword checks, illustrative scenarios, local-only storage) is stated in the interface rather than hidden.
+First Step's answer is the **Safe-Start Flex SIP** concept: readiness before commitment, flexibility over rigidity, and risk awareness over hype. The experience deliberately orders the journey — check readiness, then build a small flexible plan, then confront downside scenarios — so users encounter caution *before* they simulate committing money. Every simulation is labelled as such, and every limitation (illustrative scenarios, local-only storage) is stated in the interface rather than hidden.
 
 ## Key features
 
@@ -63,22 +63,16 @@ First Step's answer is the **Safe-Start Flex SIP** concept: readiness before com
 - **Pause/resume:** active plans show the next contribution date and offer 1–3 month pauses; pausing skips the next N contributions on the 5th of each month. Paused plans show duration, resume date, and a resume action; resuming shows a confirmation and the restored schedule. Unsaved amount edits are merged into pause actions so they are never silently discarded.
 - **Limitation:** pausing and resuming are simulated and touch no real SIP mandate.
 
-### Risk Education (`/risk`)
+### Growth Simulator (`/risk`)
 
-- **Purpose:** make downside concrete without jargon, in English or Hinglish.
-- **Interaction:** pick a monthly amount and duration to see the total invested, then view fixed illustrative falls (10%, 20%, 35%) rendered as rupee losses; a two-question quiz with instant scoring and a short glossary (NAV, CAGR, Riskometer, Drawdown) follow.
-- **Limitation:** scenarios apply fixed percentages to contributions; labelled "Illustrative scenario — not a prediction" with no forecast of recovery.
-
-### Hype Filter (`/hype-filter`)
-
-- **Purpose:** help users pause and check warning signs in investment claims.
-- **Interaction:** paste a claim (15+ characters), evaluate it, or try three fictional samples covering each verdict. Results show the five keyword checks (identifiable source, guaranteed returns, clear timeframe, acknowledged losses, pressure tactics) with per-check explanations, a verdict (**Learn more** / **Be cautious** / **Avoid the claim**) with its reasoning, and a clear/reset action.
-- **Limitation:** a transparent keyword matcher, explicitly not proof of legitimacy or fraud; absence of keywords never implies safety.
+- **Purpose:** show what regular monthly investments could become under illustrative assumptions.
+- **Interaction:** pick a monthly amount (₹500–₹5,000) and duration (1–10 years) to see total contributions, three scenario cards (4%, 8%, 12% assumed annual returns, end-of-month contributions) with ending values, gains and comparison bars, plus a growth sketch chart with tooltips. A collapsible downside section reuses the fixed 10%/20%/35% falls, and the two-question quiz follows.
+- **Limitation:** all growth figures are hypothetical illustrations, labelled as such; falls are illustrative scenarios, not predictions.
 
 ### My Plan (`/my-plan`)
 
 - **Purpose:** a dashboard for the saved simulated plan.
-- **Interaction:** prominent Active/Paused status, base/optional/total figures, next-contribution or resume explanation, and working actions: edit amounts, pause/resume, reduce to base, review risk education, and delete (two-step confirmation). Includes a compact educational tip and a feedback form (1–5 rating + comment) saved to local browser storage with a local-only confirmation.
+- **Interaction:** prominent Active/Paused status, base/optional/total figures, next-contribution or resume explanation, and working actions: edit amounts, pause/resume, reduce to base, explore growth scenarios, and delete (two-step confirmation). Includes a compact educational tip and a feedback form (1–5 rating + comment) saved to local browser storage with a local-only confirmation.
 - **Limitation:** deleting the plan removes only the plan; readiness answers stay saved.
 
 ## How the experience works
@@ -86,9 +80,8 @@ First Step's answer is the **Safe-Start Flex SIP** concept: readiness before com
 1. **Home (`/`)** introduces the concept and links the four steps; once a plan exists, a summary card shows its total and next date.
 2. **Readiness (`/readiness`)** — enter five numbers, submit, read the outcome and reasons; the outcome and surplus persist to `firststep.readiness.v1`.
 3. **Flex SIP (`/flex-sip`)** — choose base and top-up, save the plan to `firststep.plan.v1`; optionally simulate a 1–3 month pause or resume.
-4. **Risk (`/risk`)** — explore illustrative falls, take the quiz, read the glossary.
-5. **Hype Filter (`/hype-filter`)** — paste a claim, read the five checks and verdict.
-6. **My Plan (`/my-plan`)** — review status, amounts, and dates; edit, pause/resume, reduce, or delete the plan; leave locally-stored feedback (`firststep.feedback`).
+4. **Growth Simulator (`/risk`)** — explore illustrative growth scenarios, check the downside context, take the quiz, then keep learning with the Knowledge Hub videos and Learning Library below.
+5. **My Plan (`/my-plan`)** — review status, amounts, and dates; edit, pause/resume, reduce, or delete the plan; leave locally-stored feedback (`firststep.feedback`).
 
 All persisted data lives in the browser's `localStorage`; nothing is sent to a server.
 
@@ -98,7 +91,7 @@ Demonstrated by the implementation (not validated by user research):
 
 - **Readiness before commitment** — the journey starts with a check, not a checkout.
 - **Flexible rather than rigid planning** — base plus optional top-up, pausable by design.
-- **Risk awareness over hype** — downside scenarios and claim checks precede commitment.
+- **Risk awareness over hype** — downside scenarios precede commitment.
 - **Transparent limitations** — simulation labels, keyword-check caveats, and illustrative-scenario disclaimers are in the UI.
 - **Low-friction exploration** — no login, no backend; everything runs locally.
 
@@ -151,7 +144,6 @@ FirstStepGROWW--main/
       readiness.tsx     # Readiness assessment (/readiness)
       flex-sip.tsx      # Flex SIP builder (/flex-sip)
       risk.tsx          # Risk education + quiz (/risk)
-      hype-filter.tsx   # Hype Filter (/hype-filter)
       my-plan.tsx       # Dashboard (/my-plan)
       __root.tsx        # app shell, header/nav, footer, error + 404 states
     components/
@@ -159,7 +151,7 @@ FirstStepGROWW--main/
       PauseControls.tsx # shared pause/resume controls
       ui/               # shadcn primitives (mostly unused)
     lib/
-      firststep.ts      # readiness, plan/date, hype-filter rules
+      firststep.ts      # readiness and plan/date rules
       usePlan.ts        # localStorage plan + readiness persistence
     test/
       firststep.test.ts # rules coverage
@@ -171,8 +163,8 @@ FirstStepGROWW--main/
 ## Testing and quality
 
 - Framework: Vitest with jsdom; commands `bun run test` / `bun run test:watch`.
-- Coverage: 20 automated tests across 2 files — readiness outcomes and validation, pause/resume dates (1–3 months), totals, minimum-base rule, reduce-to-base, and all three hype verdicts.
-- Also verified: `tsc --noEmit` clean, production build passing, all six routes returning HTTP 200 with correct titles, and worked files lint-clean (remaining repo-wide lint items are pre-existing formatting issues).
+- Coverage: 20 automated tests across 2 files — readiness outcomes and validation, pause/resume dates (1–3 months), totals, minimum-base rule, and reduce-to-base.
+- Also verified: `tsc --noEmit` clean, production build passing, all five routes returning HTTP 200 with correct titles, and worked files lint-clean (remaining repo-wide lint items are pre-existing formatting issues).
 - Manual browser testing has not been performed; interactive and responsive checks remain a manual step.
 
 ## Data, privacy, and financial disclaimers
@@ -186,7 +178,6 @@ FirstStepGROWW--main/
 
 - Readiness uses fixed heuristic thresholds, not a financial plan.
 - Pause/resume only simulates dates; auto-resume of an expired pause happens on app load, not while a tab sits open.
-- The Hype Filter matches keywords and can miss nuance or flag legitimate mentions; it proves nothing about any claim.
 - Risk scenarios are fixed 10/20/35% illustrations, not forecasts.
 - Feedback is a local list with no sync, search, or moderation.
 - Route pages for saved plans render a loading state during SSR and hydrate client-side.
@@ -195,7 +186,6 @@ FirstStepGROWW--main/
 
 - Readiness inputs review/edit from My Plan.
 - Pause history and scheduled-reminder display.
-- More hype samples and transparent rule explanations per verdict.
 - Additional quiz questions and a progress indicator on Risk.
 - Component-level UI tests for the plan flows.
 - Accessibility audit (keyboard-only walkthrough, screen-reader pass, contrast check).
@@ -207,9 +197,8 @@ No screenshots are checked into the repo (only `favicon.ico` and `robots.txt` ex
 1. Home hero + How-it-works section.
 2. Readiness result for each outcome (cushion / tiny / ready).
 3. Flex SIP overview with pause timeline (active and paused states).
-4. Risk fall scenarios + quiz.
-5. Hype Filter result showing all five checks.
-6. My Plan dashboard with status and actions.
+4. Growth simulator scenarios + chart.
+5. My Plan dashboard with status and actions.
 
 ## Contributing and license
 
