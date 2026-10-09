@@ -6,7 +6,7 @@ First Step is an independent product-design prototype exploring how first-time i
 
 > **Educational prototype — not an official Groww product.** No real money moves here. No investment advice, no guaranteed returns, no real transactions.
 
-Live Link : https://first-step-groww-o2fd140vj-shreyansjaiswal704-3983s-projects.vercel.app/
+Live Link : https://first-step-groww.vercel.app/
 
 [![React](https://img.shields.io/badge/React-19-blue)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org)
