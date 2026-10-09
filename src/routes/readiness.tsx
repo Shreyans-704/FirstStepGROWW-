@@ -1,8 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, CheckCircle2, CircleAlert, Sprout } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronDown, CircleAlert, Sprout } from "lucide-react";
 import { PageTitle } from "@/components/Shell";
-import { assessReadiness, inr, validateReadiness, type ReadinessInput } from "@/lib/firststep";
+import {
+  EMERGENCY_MONTH_OPTIONS,
+  assessReadiness,
+  inr,
+  validateReadiness,
+  type ReadinessInput,
+} from "@/lib/firststep";
 import { saveReadiness } from "@/lib/usePlan";
 
 export const Route = createFileRoute("/readiness")({
@@ -25,7 +31,7 @@ export const Route = createFileRoute("/readiness")({
 });
 
 type Key = keyof ReadinessInput;
-const fields: { k: Key; label: string; hint: string; prefix?: string }[] = [
+const fields: { k: Key; label: string; hint: string; prefix?: string; kind?: "select" }[] = [
   { k: "income", label: "Monthly take-home income", hint: "Average if it varies", prefix: "₹" },
   {
     k: "expenses",
@@ -37,7 +43,8 @@ const fields: { k: Key; label: string; hint: string; prefix?: string }[] = [
   {
     k: "emergencyMonths",
     label: "Emergency savings",
-    hint: "How many months of essentials could you cover?",
+    hint: "How many months of essential expenses could you cover?",
+    kind: "select",
   },
   {
     k: "horizonYears",
@@ -106,24 +113,47 @@ function Readiness() {
               {f.label}
             </label>
             <p className="mb-1.5 text-sm text-muted-foreground">{f.hint}</p>
-            <div className="relative">
-              {f.prefix && (
-                <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  {f.prefix}
-                </span>
-              )}
-              <input
-                id={f.k}
-                inputMode="decimal"
-                type="number"
-                min={0}
-                className={`field ${f.prefix ? "pl-8" : ""}`}
-                value={v[f.k] ?? ""}
-                aria-invalid={!!errors[f.k]}
-                aria-describedby={errors[f.k] ? `${f.k}-err` : undefined}
-                onChange={(e) => setV({ ...v, [f.k]: e.target.value })}
-              />
-            </div>
+            {f.kind === "select" ? (
+              <div className="relative">
+                <select
+                  id={f.k}
+                  className="field appearance-none pr-10"
+                  value={v[f.k] ?? ""}
+                  aria-invalid={!!errors[f.k]}
+                  aria-describedby={errors[f.k] ? `${f.k}-err` : undefined}
+                  onChange={(e) => setV({ ...v, [f.k]: e.target.value })}
+                >
+                  {EMERGENCY_MONTH_OPTIONS.map((o) => (
+                    <option key={o.label} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : (
+              <div className="relative">
+                {f.prefix && (
+                  <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                    {f.prefix}
+                  </span>
+                )}
+                <input
+                  id={f.k}
+                  inputMode="decimal"
+                  type="number"
+                  min={0}
+                  className={`field ${f.prefix ? "pl-8" : ""}`}
+                  value={v[f.k] ?? ""}
+                  aria-invalid={!!errors[f.k]}
+                  aria-describedby={errors[f.k] ? `${f.k}-err` : undefined}
+                  onChange={(e) => setV({ ...v, [f.k]: e.target.value })}
+                />
+              </div>
+            )}
             {errors[f.k] && (
               <p id={`${f.k}-err`} className="mt-1 text-sm text-destructive">
                 {errors[f.k]}

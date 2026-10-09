@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  EMERGENCY_MONTH_OPTIONS,
   addMonths,
   analyzeClaim,
   assessReadiness,
+  emergencyMonthsFromOption,
   nextContributionDate,
   nextScheduled,
   pausePlan,
@@ -177,5 +179,180 @@ describe("flex plan dates and totals (no business-rule change)", () => {
     expect(reduced.base).toBe(1000);
     expect(reduced.status).toBe("paused");
     expect(reduced.resumeDate).toBe(paused.resumeDate);
+  });
+});
+
+describe("readiness surplus rules", () => {
+  it("zero surplus → cushion", () => {
+    const r = assessReadiness({
+      income: 20000,
+      expenses: 15000,
+      emi: 5000,
+      emergencyMonths: 6,
+      horizonYears: 5,
+    });
+    expect(r.outcome).toBe("cushion");
+    expect(r.spare).toBe(0);
+  });
+
+  it("negative surplus → cushion without presenting it as investable", () => {
+    const r = assessReadiness({
+      income: 20000,
+      expenses: 18000,
+      emi: 5000,
+      emergencyMonths: 6,
+      horizonYears: 5,
+    });
+    expect(r.outcome).toBe("cushion");
+    expect(r.spare).toBe(-3000);
+    expect(r.reasons.join(" ")).toMatch(/nothing is left/i);
+  });
+
+  it("positive but small surplus relative to income → tiny", () => {
+    const r = assessReadiness({
+      income: 50000,
+      expenses: 48000,
+      emi: 1000,
+      emergencyMonths: 6,
+      horizonYears: 5,
+    });
+    expect(r.spare).toBe(1000);
+    expect(r.outcome).toBe("tiny");
+    expect(r.reasons.join(" ")).toMatch(/little room/i);
+  });
+
+  it("strong surplus, adequate savings, long horizon → ready", () => {
+    const r = assessReadiness({
+      income: 50000,
+      expenses: 10000,
+      emi: 2000,
+      emergencyMonths: 6,
+      horizonYears: 5,
+    });
+    expect(r.spare).toBe(38000);
+    expect(r.outcome).toBe("ready");
+  });
+
+  it("strong surplus with a short horizon → tiny, explained by horizon not affordability", () => {
+    const r = assessReadiness({
+      income: 50000,
+      expenses: 0,
+      emi: 0,
+      emergencyMonths: 6,
+      horizonYears: 2,
+    });
+    expect(r.spare).toBe(50000);
+    expect(r.outcome).toBe("tiny");
+    expect(r.reasons.join(" ")).toMatch(/surplus is strong.*short for market-linked/i);
+  });
+
+  it("limited emergency savings despite strong surplus → tiny", () => {
+    const r = assessReadiness({
+      income: 50000,
+      expenses: 0,
+      emi: 0,
+      emergencyMonths: 2,
+      horizonYears: 5,
+    });
+    expect(r.outcome).toBe("tiny");
+    expect(r.reasons.join(" ")).toMatch(/under 3 months/i);
+  });
+
+  it("zero fixed expenses never divides by zero", () => {
+    const r = assessReadiness({
+      income: 50000,
+      expenses: 0,
+      emi: 0,
+      emergencyMonths: 6,
+      horizonYears: 2,
+    });
+    expect(Number.isFinite(r.spare)).toBe(true);
+    expect(Number.isFinite(r.emiRatio)).toBe(true);
+    expect(Number.isFinite(r.surplusRatio)).toBe(true);
+  });
+
+  it("surplus is income minus expenses minus EMI", () => {
+    const r = assessReadiness({
+      income: 40000,
+      expenses: 15000,
+      emi: 2000,
+      emergencyMonths: 4,
+      horizonYears: 5,
+    });
+    expect(r.spare).toBe(23000);
+  });
+
+  it("invalid inputs are rejected by validation and guarded in assessment", () => {
+    expect(
+      validateReadiness({
+        income: "-5",
+        expenses: "0",
+        emi: "0",
+        emergencyMonths: "6",
+        horizonYears: "5",
+      }).income,
+    ).toBeDefined();
+    const r = assessReadiness({
+      income: 0,
+      expenses: 0,
+      emi: 0,
+      emergencyMonths: 6,
+      horizonYears: 5,
+    });
+    expect(r.outcome).toBe("cushion");
+    expect(Number.isFinite(r.emiRatio)).toBe(true);
+  });
+});
+
+describe("emergency savings dropdown", () => {
+  it("has ten options starting unselected", () => {
+    expect(EMERGENCY_MONTH_OPTIONS).toHaveLength(10);
+    expect(EMERGENCY_MONTH_OPTIONS[0]).toEqual({ value: "", label: "Select months" });
+  });
+
+  it("maps every option to the specified months", () => {
+    expect(emergencyMonthsFromOption("")).toBeNull();
+    expect(emergencyMonthsFromOption("0.5")).toBe(0.5);
+    expect(emergencyMonthsFromOption("1")).toBe(1);
+    expect(emergencyMonthsFromOption("2")).toBe(2);
+    expect(emergencyMonthsFromOption("3")).toBe(3);
+    expect(emergencyMonthsFromOption("4")).toBe(4);
+    expect(emergencyMonthsFromOption("5")).toBe(5);
+    expect(emergencyMonthsFromOption("6")).toBe(6);
+    expect(emergencyMonthsFromOption("9")).toBe(9);
+    expect(emergencyMonthsFromOption("12")).toBe(12);
+  });
+
+  it("treats an unselected value as incomplete input", () => {
+    expect(
+      validateReadiness({
+        income: "50000",
+        expenses: "0",
+        emi: "0",
+        emergencyMonths: "",
+        horizonYears: "5",
+      }).emergencyMonths,
+    ).toBe("Please select an option");
+  });
+
+  it("uses the selected value in the readiness calculation", () => {
+    const months = emergencyMonthsFromOption("6");
+    expect(months).toBe(6);
+    const r = assessReadiness({
+      income: 50000,
+      expenses: 0,
+      emi: 0,
+      emergencyMonths: months as number,
+      horizonYears: 5,
+    });
+    expect(r.outcome).toBe("ready");
+    const low = assessReadiness({
+      income: 50000,
+      expenses: 0,
+      emi: 0,
+      emergencyMonths: emergencyMonthsFromOption("0.5") as number,
+      horizonYears: 5,
+    });
+    expect(low.outcome).toBe("cushion");
   });
 });
