@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Home, Gauge, Repeat, ShieldAlert, Search, Footprints } from "lucide-react";
 import type { ReactNode } from "react";
+import { DesktopDecor } from "./DesktopDecor";
 
 const nav = [
   { to: "/", label: "Home", icon: Home },
@@ -41,7 +42,10 @@ export function Shell({ children }: { children: ReactNode }) {
           <span className="shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium text-muted-foreground">Prototype</span>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-xl flex-1 px-5 pb-10 pt-6">{children}</main>
+      <div className="relative mx-auto w-full max-w-6xl flex-1">
+        <DesktopDecor />
+        <main className="relative z-10 mx-auto w-full max-w-xl flex-1 px-5 pb-10 pt-6">{children}</main>
+      </div>
       <footer className="mx-auto w-full max-w-xl border-t px-5 pb-24 pt-5 text-xs leading-relaxed text-muted-foreground md:pb-8">
         Educational prototype for a product case study. Not affiliated with or endorsed by Groww. Not investment advice.
         Mutual fund investments are subject to market risks; read all scheme documents carefully. No real money moves here.

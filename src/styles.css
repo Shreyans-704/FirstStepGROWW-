@@ -116,3 +116,16 @@
   }
   &:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
 }
+
+/* Desktop-only floating decorations (container itself is hidden below lg). */
+@keyframes fs-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.fs-float {
+  animation: fs-float 9s ease-in-out infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fs-float { animation: none; }
+}
