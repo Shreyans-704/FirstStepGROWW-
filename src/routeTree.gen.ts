@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FlexSipRouteImport } from './routes/flex-sip'
+import { Route as HypeFilterRouteImport } from './routes/hype-filter'
+import { Route as MyPlanRouteImport } from './routes/my-plan'
+import { Route as ReadinessRouteImport } from './routes/readiness'
+import { Route as RiskRouteImport } from './routes/risk'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FlexSipRoute = FlexSipRouteImport.update({
+  id: '/flex-sip',
+  path: '/flex-sip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HypeFilterRoute = HypeFilterRouteImport.update({
+  id: '/hype-filter',
+  path: '/hype-filter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyPlanRoute = MyPlanRouteImport.update({
+  id: '/my-plan',
+  path: '/my-plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReadinessRoute = ReadinessRouteImport.update({
+  id: '/readiness',
+  path: '/readiness',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiskRoute = RiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/flex-sip': typeof FlexSipRoute
+  '/hype-filter': typeof HypeFilterRoute
+  '/my-plan': typeof MyPlanRoute
+  '/readiness': typeof ReadinessRoute
+  '/risk': typeof RiskRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/flex-sip': typeof FlexSipRoute
+  '/hype-filter': typeof HypeFilterRoute
+  '/my-plan': typeof MyPlanRoute
+  '/readiness': typeof ReadinessRoute
+  '/risk': typeof RiskRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/flex-sip': typeof FlexSipRoute
+  '/hype-filter': typeof HypeFilterRoute
+  '/my-plan': typeof MyPlanRoute
+  '/readiness': typeof ReadinessRoute
+  '/risk': typeof RiskRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/flex-sip' | '/hype-filter' | '/my-plan' | '/readiness' | '/risk'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/flex-sip' | '/hype-filter' | '/my-plan' | '/readiness' | '/risk'
+  id:
+    | '__root__'
+    | '/'
+    | '/flex-sip'
+    | '/hype-filter'
+    | '/my-plan'
+    | '/readiness'
+    | '/risk'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FlexSipRoute: typeof FlexSipRoute
+  HypeFilterRoute: typeof HypeFilterRoute
+  MyPlanRoute: typeof MyPlanRoute
+  ReadinessRoute: typeof ReadinessRoute
+  RiskRoute: typeof RiskRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/flex-sip': {
+      id: '/flex-sip'
+      path: '/flex-sip'
+      fullPath: '/flex-sip'
+      preLoaderRoute: typeof FlexSipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hype-filter': {
+      id: '/hype-filter'
+      path: '/hype-filter'
+      fullPath: '/hype-filter'
+      preLoaderRoute: typeof HypeFilterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-plan': {
+      id: '/my-plan'
+      path: '/my-plan'
+      fullPath: '/my-plan'
+      preLoaderRoute: typeof MyPlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/readiness': {
+      id: '/readiness'
+      path: '/readiness'
+      fullPath: '/readiness'
+      preLoaderRoute: typeof ReadinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risk': {
+      id: '/risk'
+      path: '/risk'
+      fullPath: '/risk'
+      preLoaderRoute: typeof RiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FlexSipRoute: FlexSipRoute,
+  HypeFilterRoute: HypeFilterRoute,
+  MyPlanRoute: MyPlanRoute,
+  ReadinessRoute: ReadinessRoute,
+  RiskRoute: RiskRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
