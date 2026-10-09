@@ -49,7 +49,7 @@ function Risk() {
   const [answers, setAnswers] = useState<(number | null)[]>([null, null]);
   const [checked, setChecked] = useState(false);
   const invested = amt * 12 * yrs;
-  const score = answers.filter((a, i) => a === quiz[i].answer).length;
+  const score = answers.filter((a, i) => a === quiz[i]?.answer).length;
 
   return (
     <div className="space-y-5">
