@@ -152,7 +152,7 @@ function MyPlan() {
             Build a flexible SIP plan that fits your income, goals, and changing circumstances.
           </p>
           <div className="mx-auto mt-7 flex max-w-xs flex-col gap-2">
-            <Link to="/flex-sip" className="btn btn-primary w-full">
+            <Link to="/readiness" className="btn btn-primary w-full">
               Build my plan <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link

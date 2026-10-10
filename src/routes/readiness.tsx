@@ -12,8 +12,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { PageTitle } from "@/components/Shell";
-import { MarketLabCopy } from "@/components/landing/MarketLabCopy";
-import { MarketLabVisual } from "@/components/landing/MarketLabVisual";
+import { FinancialSnapshot } from "@/components/readiness/FinancialSnapshot";
 import {
   EMERGENCY_MONTH_OPTIONS,
   HORIZON_YEAR_OPTIONS,
@@ -23,7 +22,7 @@ import {
   type ReadinessInput,
 } from "@/lib/firststep";
 import { saveReadiness } from "@/lib/usePlan";
-import { prefersReducedMotion, useInView } from "@/lib/learn";
+import { prefersReducedMotion } from "@/lib/learn";
 
 export const Route = createFileRoute("/readiness")({
   head: () => ({
@@ -131,7 +130,6 @@ function Readiness() {
   const [v, setV] = useState<Partial<Record<Key, string>>>({});
   const [errors, setErrors] = useState<Partial<Record<Key, string>>>({});
   const [result, setResult] = useState<ReturnType<typeof assessReadiness> | null>(null);
-  const { ref: labRef, inView: labInView } = useInView<HTMLDivElement>(0.15);
   const resultRef = useRef<HTMLElement | null>(null);
 
   function submit(e: React.FormEvent) {
@@ -287,11 +285,8 @@ function Readiness() {
             </div>
           </div>
         </div>
-        <div ref={labRef} className={labInView ? "sc-on" : undefined}>
-          <MarketLabCopy headingId="readiness-market-heading" />
-          <div className="mt-10">
-            <MarketLabVisual />
-          </div>
+        <div className="min-w-0">
+          <FinancialSnapshot values={v} />
         </div>
       </div>
 

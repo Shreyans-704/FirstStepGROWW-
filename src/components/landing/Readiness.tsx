@@ -2,56 +2,39 @@
  * Section 1 — Financial readiness checklist (editorial, interactive).
  * The CTA below reads the live checklist state; progress persists on-device.
  */
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SECTION_ANCHORS } from "@/config/site";
-import {
-  CHECKLIST_ITEMS,
-  CHECKLIST_KEY,
-  checklistProgress,
-  readChecklist,
-  toggleChecklist,
-  type ChecklistId,
-} from "@/lib/learn";
+import { CHECKLIST_ITEMS, checklistProgress, toggleChecklist, type ChecklistId } from "@/lib/learn";
+import { unlock } from "@/lib/gate";
 import { cn } from "@/lib/utils";
 import { Eyebrow, Reveal } from "./Reveal";
 
-const CTA_COPY = [
-  "Start with My Readiness",
-  "Continue — Check My Readiness",
-  "Almost There — Check My Readiness",
-  "All Set — Check My Readiness",
-] as const;
-
 const HELPER_COPY = [
-  "Tick what you've already thought about — honesty beats speed here.",
-  "Good — one basic considered. Two more to see the full picture.",
-  "Two down. One more and you've covered the essentials.",
-  "All three covered. The full check takes about two minutes.",
+  "Tick all four basics to continue — honesty beats speed here.",
+  "Good — one basic considered. Three more to go.",
+  "Two down. Two more and you've covered the essentials.",
+  "Three down. One more — confirm you're 20 or older.",
+  "All four covered. The full check takes about two minutes.",
 ] as const;
 
 export function Readiness() {
   const [checked, setChecked] = useState<ChecklistId[]>([]);
-
-  useEffect(() => {
-    setChecked(readChecklist());
-  }, []);
+  const navigate = useNavigate();
 
   const done = checklistProgress(checked);
   const total = CHECKLIST_ITEMS.length;
   const pct = Math.round((done / total) * 100);
+  const complete = done >= total;
 
   function toggle(id: ChecklistId) {
-    setChecked((prev) => {
-      const next = toggleChecklist(prev, id);
-      try {
-        localStorage.setItem(CHECKLIST_KEY, JSON.stringify(next));
-      } catch {
-        /* storage unavailable — checklist still works in-memory */
-      }
-      return next;
-    });
+    setChecked((prev) => toggleChecklist(prev, id));
+  }
+
+  function handleContinue() {
+    if (!unlock(done)) return;
+    navigate({ to: "/readiness" });
   }
 
   return (
@@ -98,13 +81,29 @@ export function Readiness() {
           </div>
 
           <div className="mt-8">
-            <Link
-              to="/readiness"
-              className="btn btn-primary !h-[52px] !rounded-full !px-7 !text-[15px]"
+            {complete ? (
+              <button
+                type="button"
+                onClick={handleContinue}
+                className="btn btn-primary !h-[52px] !rounded-full !px-7 !text-[15px]"
+              >
+                All Set — Check My Readiness <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled
+                aria-describedby="readiness-cta-help"
+                className="btn btn-primary !h-[52px] !rounded-full !px-7 !text-[15px]"
+              >
+                Select all 4 basics to continue
+              </button>
+            )}
+            <p
+              id="readiness-cta-help"
+              aria-live="polite"
+              className="mt-3 text-sm text-muted-foreground"
             >
-              {CTA_COPY[done] ?? CTA_COPY[0]} <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <p aria-live="polite" className="mt-3 text-sm text-muted-foreground">
               {HELPER_COPY[done] ?? HELPER_COPY[0]}
             </p>
           </div>
@@ -166,7 +165,7 @@ export function Readiness() {
             })}
           </ul>
           <p className="mt-4 text-[13px] text-muted-foreground">
-            Saved on this device only — the full check lives on the readiness page.
+            Selections apply to this visit only — the full check lives on the readiness page.
           </p>
         </Reveal>
       </div>

@@ -3,6 +3,7 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
+  redirect,
   useRouter,
   HeadContent,
   Scripts,
@@ -12,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { isUnlocked } from "../lib/gate";
 import { Shell } from "@/components/Shell";
 
 function NotFoundComponent() {
@@ -61,6 +63,14 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: ({ location }) => {
+    // The landing page stays public. Every other route requires the
+    // in-memory declaration gate for the current visit — direct URLs,
+    // refreshes, back/forward, and internal links all pass through here.
+    if (location.pathname === "/") return;
+    if (isUnlocked()) return;
+    throw redirect({ to: "/", hash: "discover" });
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },

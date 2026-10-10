@@ -49,7 +49,7 @@ describe("MyPlan page", () => {
       ),
     ).toBeInTheDocument();
     const build = screen.getByRole("link", { name: /Build my plan/ });
-    expect(build.getAttribute("href")).toBe("/flex-sip");
+    expect(build.getAttribute("href")).toBe("/readiness");
     const risk = screen.getByRole("link", { name: "Explore Growth Simulator" });
     expect(risk.getAttribute("href")).toBe("/risk");
     expect(screen.queryByText("Monthly plan")).not.toBeInTheDocument();

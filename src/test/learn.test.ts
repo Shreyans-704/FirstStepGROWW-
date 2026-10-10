@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { HUB_VIDEOS } from "@/config/videos";
 import {
+  CHECKLIST_ITEMS,
   allCategoriesPresent,
   categoryCount,
   checklistProgress,
   filterVideos,
   sipProjection,
   sipValueAtMonth,
+  summarizeFinances,
   toggleChecklist,
 } from "@/lib/learn";
 
@@ -43,6 +45,13 @@ describe("readiness checklist", () => {
   it("counts progress", () => {
     expect(checklistProgress([])).toBe(0);
     expect(checklistProgress(["safety-net", "goals"])).toBe(2);
+  });
+
+  it("covers four declarations including the age check", () => {
+    expect(CHECKLIST_ITEMS).toHaveLength(4);
+    expect(CHECKLIST_ITEMS[3]).toMatchObject({ id: "age" });
+    expect(toggleChecklist([], "age")).toEqual(["age"]);
+    expect(checklistProgress(["safety-net", "budget", "goals", "age"])).toBe(4);
   });
 });
 
@@ -113,5 +122,57 @@ describe("end-of-month growth math (growth simulator)", () => {
       expect(v).toBeGreaterThan(prev);
       prev = v;
     }
+  });
+});
+
+describe("financial snapshot summary", () => {
+  it("reports empty when nothing is entered", () => {
+    const s = summarizeFinances({});
+    expect(s.hasAny).toBe(false);
+    expect(s.income).toBeUndefined();
+    expect(s.commitments).toBeUndefined();
+    expect(s.leftover).toBeUndefined();
+  });
+
+  it("computes commitments and leftover from complete money fields", () => {
+    const s = summarizeFinances({ income: "50000", expenses: "20000", emi: "5000" });
+    expect(s.hasAny).toBe(true);
+    expect(s.income).toBe(50000);
+    expect(s.commitments).toBe(25000);
+    expect(s.leftover).toBe(25000);
+  });
+
+  it("leaves metrics undefined for partial forms instead of zero-filling", () => {
+    const onlyIncome = summarizeFinances({ income: "40000" });
+    expect(onlyIncome.hasAny).toBe(true);
+    expect(onlyIncome.income).toBe(40000);
+    expect(onlyIncome.commitments).toBeUndefined();
+    expect(onlyIncome.leftover).toBeUndefined();
+
+    const noEmi = summarizeFinances({ income: "40000", expenses: "15000" });
+    expect(noEmi.commitments).toBeUndefined();
+    expect(noEmi.leftover).toBeUndefined();
+  });
+
+  it("flags over-budget with a negative leftover", () => {
+    const s = summarizeFinances({ income: "20000", expenses: "18000", emi: "5000" });
+    expect(s.commitments).toBe(23000);
+    expect(s.leftover).toBe(-3000);
+  });
+
+  it("ignores blank and invalid entries", () => {
+    const s = summarizeFinances({ income: "abc", expenses: "", emi: "-100", emergencyMonths: "3" });
+    expect(s.income).toBeUndefined();
+    expect(s.expenses).toBeUndefined();
+    expect(s.emi).toBeUndefined();
+    expect(s.emergencyMonths).toBe(3);
+    expect(s.hasAny).toBe(true);
+  });
+
+  it("passes through durations without inventing fund amounts", () => {
+    const s = summarizeFinances({ emergencyMonths: "3", horizonYears: "5" });
+    expect(s.emergencyMonths).toBe(3);
+    expect(s.horizonYears).toBe(5);
+    expect(s.leftover).toBeUndefined();
   });
 });

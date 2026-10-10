@@ -66,7 +66,7 @@ First Step's answer is the **Safe-Start Flex SIP** concept: readiness before com
 ### Growth Simulator (`/risk`)
 
 - **Purpose:** show what regular monthly investments could become under illustrative assumptions.
-- **Interaction:** pick a monthly amount (₹500–₹5,000) and duration (1–10 years) to see total contributions, three scenario cards (4%, 8%, 12% assumed annual returns, end-of-month contributions) with ending values, gains and comparison bars, plus a growth sketch chart with tooltips. A collapsible downside section reuses the fixed 10%/20%/35% falls, and the two-question quiz follows.
+- **Interaction:** pick a monthly amount (₹500–₹5,000) and duration (1–10 years) to see total contributions, three simplified scenario cards (4%, 8%, 12% assumed annual returns, end-of-month contributions) with ending values and gains, a stacked-bar comparison with a plain-words summary, and a donut splitting the moderate sketch into contributions versus growth.
 - **Limitation:** all growth figures are hypothetical illustrations, labelled as such; falls are illustrative scenarios, not predictions.
 
 ### My Plan (`/my-plan`)

@@ -67,11 +67,9 @@ export function allCategoriesPresent(): boolean {
   );
 }
 
-/* ---------- Readiness checklist ---------- */
+/* ---------- Readiness checklist (in-memory only — never persisted) ---------- */
 
-export const CHECKLIST_KEY = "firststep.checklist.v1";
-
-export type ChecklistId = "safety-net" | "budget" | "goals";
+export type ChecklistId = "safety-net" | "budget" | "goals" | "age";
 
 export const CHECKLIST_ITEMS: { id: ChecklistId; title: string; text: string }[] = [
   {
@@ -89,6 +87,11 @@ export const CHECKLIST_ITEMS: { id: ChecklistId; title: string; text: string }[]
     title: "Your financial goals",
     text: "I know when I might need this money — my time horizon.",
   },
+  {
+    id: "age",
+    title: "Age 20 or older",
+    text: "I confirm I am 20 years old or older.",
+  },
 ];
 
 export function checklistProgress(checked: ChecklistId[]): number {
@@ -99,19 +102,58 @@ export function toggleChecklist(checked: ChecklistId[], id: ChecklistId): Checkl
   return checked.includes(id) ? checked.filter((c) => c !== id) : [...checked, id];
 }
 
-export function readChecklist(): ChecklistId[] {
-  try {
-    const raw = localStorage.getItem(CHECKLIST_KEY);
-    if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    const valid = new Set(CHECKLIST_ITEMS.map((i) => i.id));
-    return parsed.filter(
-      (x): x is ChecklistId => typeof x === "string" && valid.has(x as ChecklistId),
-    );
-  } catch {
-    return [];
-  }
+/* ---------- Financial snapshot (readiness companion) ---------- */
+
+export type SnapshotValues = {
+  income?: string;
+  expenses?: string;
+  emi?: string;
+  emergencyMonths?: string;
+  horizonYears?: string;
+};
+
+export type FinanceSummary = {
+  hasAny: boolean;
+  income: number | undefined;
+  expenses: number | undefined;
+  emi: number | undefined;
+  commitments: number | undefined;
+  leftover: number | undefined;
+  emergencyMonths: number | undefined;
+  horizonYears: number | undefined;
+};
+
+function snapshotNum(raw: string | undefined): number | undefined {
+  if (raw === undefined) return undefined;
+  const trimmed = raw.trim();
+  if (trimmed === "") return undefined;
+  const n = Number(trimmed);
+  if (!Number.isFinite(n) || n < 0) return undefined;
+  return n;
+}
+
+/**
+ * Derive displayable metrics from raw form strings.
+ * Missing or invalid fields stay undefined — never treated as zero.
+ * No essential/discretionary split is invented: fixed expenses are
+ * summed as-is, and no emergency-fund amount is derived from them.
+ */
+export function summarizeFinances(values: SnapshotValues): FinanceSummary {
+  const income = snapshotNum(values.income);
+  const expenses = snapshotNum(values.expenses);
+  const emi = snapshotNum(values.emi);
+  const emergencyMonths = snapshotNum(values.emergencyMonths);
+  const horizonYears = snapshotNum(values.horizonYears);
+  const hasAny =
+    income !== undefined ||
+    expenses !== undefined ||
+    emi !== undefined ||
+    emergencyMonths !== undefined ||
+    horizonYears !== undefined;
+  const commitments = expenses !== undefined && emi !== undefined ? expenses + emi : undefined;
+  const leftover =
+    income !== undefined && commitments !== undefined ? income - commitments : undefined;
+  return { hasAny, income, expenses, emi, commitments, leftover, emergencyMonths, horizonYears };
 }
 
 /* ---------- Illustrative SIP projection (explicitly hypothetical) ---------- */
