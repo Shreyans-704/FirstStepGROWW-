@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   CalendarDays,
@@ -14,8 +14,9 @@ import {
 } from "lucide-react";
 import { PageTitle, SimLabel, StatusPill } from "@/components/Shell";
 import { PauseControls } from "@/components/PauseControls";
+import { OUTCOME_META, classifyOutcome } from "@/lib/affordability";
 import { fmtDate, inr, nextScheduled, planTotal, reduceToBase } from "@/lib/firststep";
-import { usePlan } from "@/lib/usePlan";
+import { loadAssessment, usePlan, type StoredAssessment } from "@/lib/usePlan";
 
 export const Route = createFileRoute("/my-plan")({
   head: () => ({
@@ -59,6 +60,11 @@ function MyPlan() {
   const [fbCount, setFbCount] = useState<number | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [justResumed, setJustResumed] = useState(false);
+  const [assessment, setAssessment] = useState<StoredAssessment | null>(null);
+
+  useEffect(() => {
+    if (loaded) setAssessment(loadAssessment());
+  }, [loaded]);
 
   if (!loaded) return <p className="text-muted-foreground">Loading your plan…</p>;
 
@@ -127,6 +133,38 @@ function MyPlan() {
         title="My first step"
         sub="Your saved flexible plan, its status and next contribution."
       />
+
+      {assessment &&
+        (() => {
+          const check = classifyOutcome(assessment.input);
+          return (
+            <section aria-label="Money check recap" className="card space-y-3">
+              <p className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+                <span>Your money check · {OUTCOME_META[check.outcome].title}</span>
+                {assessment.source === "quick" && (
+                  <span className="rounded-full bg-warning-soft px-2 py-0.5 text-[10px] font-bold tracking-wide text-warning">
+                    APPROXIMATE
+                  </span>
+                )}
+              </p>
+              <p className="font-display text-2xl font-bold">
+                {inr(check.snapshot.remaining)}
+                <span className="text-sm font-normal text-muted-foreground">
+                  {" "}
+                  /month left after planned expenses
+                </span>
+              </p>
+              {check.nextSteps[0] && (
+                <p className="text-sm text-muted-foreground">
+                  <strong className="text-foreground">Next:</strong> {check.nextSteps[0]}
+                </p>
+              )}
+              <Link to="/readiness" className="btn btn-outline w-full">
+                <Pencil className="h-4 w-4" /> Review or edit answers
+              </Link>
+            </section>
+          );
+        })()}
 
       {showResumed && plan && nextDate && (
         <section aria-live="polite" className="card space-y-1 border-primary/40 bg-primary-soft/40">
