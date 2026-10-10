@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { createMemoryHistory, createRouter } from "@tanstack/react-router";
 import { waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { isUnlocked, lock, unlock } from "@/lib/gate";
 import { routeTree } from "@/routeTree.gen";
@@ -44,6 +44,23 @@ describe("declaration gate store", () => {
     expect(isUnlocked()).toBe(false);
     expect(unlock(4)).toBe(true);
     expect(isUnlocked()).toBe(true);
+  });
+
+  it("mirrors the unlock to the tab session and clears it on lock", () => {
+    expect(unlock(4)).toBe(true);
+    expect(sessionStorage.getItem("firststep.unlocked.v1")).toBe("1");
+    lock();
+    expect(sessionStorage.getItem("firststep.unlocked.v1")).toBeNull();
+    expect(isUnlocked()).toBe(false);
+  });
+
+  it("restores the unlock from the tab session after a fresh module load", async () => {
+    unlock(4);
+    vi.resetModules();
+    const fresh = await import("@/lib/gate");
+    expect(fresh.isUnlocked()).toBe(true);
+    fresh.lock();
+    expect(fresh.isUnlocked()).toBe(false);
   });
 });
 

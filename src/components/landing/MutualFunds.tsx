@@ -56,7 +56,7 @@ export function MutualFunds() {
   const [rate, setRate] = useState(10);
   const [years, setYears] = useState(10);
 
-  const proj = useMemo(() => sipProjection(amount, rate, years), [amount, rate, years]);
+  const proj = useMemo(() => sipProjection(amount, rate, years, "end"), [amount, rate, years]);
   const line = useMemo(() => curvePath(proj.yearly), [proj]);
 
   return (
@@ -238,8 +238,9 @@ export function MutualFunds() {
               </svg>
               <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
                 Hypothetical {rate}% annual growth on {inr(amount)}/month for {years}{" "}
-                {years === 1 ? "year" : "years"}. Real funds fluctuate, charge fees, and can lose
-                money — this sketch ignores all of that on purpose.
+                {years === 1 ? "year" : "years"}, with end-of-month contributions. Real funds
+                fluctuate, charge fees, and can lose money — this sketch ignores all of that on
+                purpose.
               </p>
             </div>
           </Reveal>
