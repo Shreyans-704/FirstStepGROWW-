@@ -203,10 +203,6 @@ export function findRange(list: MoneyRange[], id: string | null): MoneyRange | n
 export type PrimaryStep = {
   title: string;
   blurb: string;
-  /** Where the primary button leads. */
-  to: "/readiness" | "/flex-sip" | "/risk" | "/my-plan";
-  hash?: string;
-  label: string;
 };
 
 export type QuickResult = {
@@ -230,40 +226,29 @@ function primaryStepFor(outcome: AffordabilityOutcome, priority: Priority): Prim
     return {
       title: "Build a starter buffer first",
       blurb: "Even one month of essentials in accessible savings changes your options.",
-      to: "/readiness",
-      label: "Refine my details",
     };
   }
   if (priority === "learning") {
     return {
       title: "Learn the basics first",
       blurb: "Short lessons on markets, mutual funds and risk — then decide.",
-      to: "/risk",
-      hash: "knowledge-hub",
-      label: "Start learning",
     };
   }
   if (priority === "goal-saving") {
     return {
       title: "Set a savings target",
       blurb: "Name the goal and see what it takes per month in the Detailed Plan.",
-      to: "/readiness",
-      label: "Plan my goal",
     };
   }
   if (outcome === "small-start") {
     return {
       title: "Explore a tiny flexible start",
       blurb: "See what a small, skippable monthly amount could look like — no pressure.",
-      to: "/flex-sip",
-      label: "Explore Flex SIP",
     };
   }
   return {
     title: "Sharpen your numbers",
     blurb: "Exact amounts turn this rough sketch into a reliable plan.",
-    to: "/readiness",
-    label: "Refine my details",
   };
 }
 

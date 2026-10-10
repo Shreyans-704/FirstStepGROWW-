@@ -8,7 +8,13 @@ export const getRouter = () => {
   const router = createRouter({
     routeTree,
     context: { queryClient },
-    scrollRestoration: true,
+    // Built-in scroll-position caching is intentionally off: it restores
+    // stale positions when revisiting a page. Cross-page scroll-to-top is
+    // owned by <ScrollToTop /> in __root.tsx; hash-anchor scrolling still
+    // works through the router's hash handling. Instant behavior avoids a
+    // slow smooth glide on long pages (see html scroll-behavior in CSS).
+    scrollRestoration: false,
+    scrollRestorationBehavior: "instant",
     defaultPreloadStaleTime: 0,
   });
 

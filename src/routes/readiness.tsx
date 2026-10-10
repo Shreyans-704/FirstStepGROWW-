@@ -21,6 +21,7 @@ import {
   classifyOutcome,
   defaultScenarios,
   horizonFromOption,
+  isUsableDetailedInput,
   parseAmount,
   planGoal,
   scenarioSnapshots,
@@ -225,9 +226,14 @@ function Readiness() {
   // Scenario I: returning users pick up where they left off.
   // Detailed records restore the full planner; quick (range-based)
   // records reopen the Quick Start result, which restores itself.
+  // The edit destination is decided by the saved data, not by age:
+  // records that are not usable exact-amount assessments (stale or
+  // corrupted saves) fall through to the current Quick Start onboarding
+  // instead of opening the exact-amount form with wrong values.
   useEffect(() => {
     const saved = loadAssessment();
     if (!saved || saved.source === "quick") return;
+    if (!isUsableDetailedInput(saved.input)) return;
     const inp = saved.input;
     setIncome({
       baseIncome: String(inp.baseIncome),

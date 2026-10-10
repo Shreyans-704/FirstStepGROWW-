@@ -10,7 +10,6 @@ import {
   GraduationCap,
   Hourglass,
   Palette,
-  Pencil,
   RotateCcw,
   Sprout,
 } from "lucide-react";
@@ -566,19 +565,21 @@ export function QuickStart({
             </p>
             <h3 className="font-display text-xl font-bold">{result.primaryStep.title}</h3>
             <p className="text-sm text-muted-foreground">{result.primaryStep.blurb}</p>
-            <Link
-              to={result.primaryStep.to}
-              {...(result.primaryStep.hash ? { hash: result.primaryStep.hash } : {})}
-              className="btn btn-primary w-full"
-            >
-              {result.primaryStep.label} <ArrowRight className="h-4 w-4" />
+            <Link to="/flex-sip" className="btn btn-primary w-full">
+              Explore Flex SIP <ArrowRight className="h-4 w-4" />
             </Link>
+            {result.outcome !== "small-start" && (
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Opens a hypothetical simulation to explore — not a recommendation to invest, and no
+                real money moves.
+              </p>
+            )}
             <button
               type="button"
               className="btn btn-outline w-full"
               onClick={() => onRefine(answers)}
             >
-              <Pencil className="h-4 w-4" /> Refine with exact amounts
+              Refine my details <ArrowRight className="h-4 w-4" />
             </button>
             <Link
               to="/risk"

@@ -103,7 +103,7 @@ describe("quick start onboarding", () => {
     expect((await screen.findAllByText(/Approximate/)).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("What this tells you")).toBeInTheDocument();
     expect(screen.getByText("What it can't tell you")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Refine with exact amounts/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Refine my details/ })).toBeInTheDocument();
   });
 
   it("requires a choice before continuing", async () => {
@@ -170,7 +170,7 @@ describe("quick start onboarding", () => {
     fireEvent.click(screen.getByRole("radio", { name: "Several months of expenses" }));
     fireEvent.click(screen.getByRole("button", { name: /See my result/ }));
     await screen.findByText("Explore a small starting amount");
-    fireEvent.click(screen.getByRole("button", { name: /Refine with exact amounts/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Refine my details/ }));
     expect(await screen.findByText("What comes in?")).toBeInTheDocument();
     expect(screen.getByLabelText(/Monthly income/)).toHaveValue(35000);
     expect(screen.getByRole("radio", { name: /^Fixed/ })).toHaveAttribute("aria-checked", "true");

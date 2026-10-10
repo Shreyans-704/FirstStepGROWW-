@@ -34,6 +34,68 @@ export type AssessmentInput = {
 
 export type AffordabilityOutcome = "safety-net" | "small-start" | "review-plan";
 
+/**
+ * Whether a stored value is a restorable exact-amount assessment.
+ * Records from before the Quick Start redesign, or corrupted records,
+ * may miss fields or hold non-numeric values — restoring those would
+ * open the exact-amount form with garbage instead of the user's answers.
+ * Such records must fall through to the current Quick Start onboarding.
+ */
+export function isUsableDetailedInput(v: unknown): v is AssessmentInput {
+  if (typeof v !== "object" || v === null) return false;
+  const i = v as Record<string, unknown>;
+  const amount = (k: string, positive = false): boolean =>
+    typeof i[k] === "number" &&
+    Number.isFinite(i[k]) &&
+    (i[k] as number) >= 0 &&
+    (!positive || (i[k] as number) > 0);
+  if (!amount("baseIncome", true)) return false;
+  for (const k of [
+    "additionalIncome",
+    "essential",
+    "discretionary",
+    "emi",
+    "upcoming",
+    "emergencySavings",
+  ]) {
+    if (!amount(k)) return false;
+  }
+  if (typeof i["hasEmergencyFund"] !== "boolean") return false;
+  if (typeof i["needSoon"] !== "boolean") return false;
+  if (typeof i["goal"] !== "string") return false;
+  if (
+    i["incomeType"] !== "fixed" &&
+    i["incomeType"] !== "variable" &&
+    i["incomeType"] !== "irregular"
+  ) {
+    return false;
+  }
+  if (
+    i["familiarity"] !== "beginner" &&
+    i["familiarity"] !== "some" &&
+    i["familiarity"] !== "confident"
+  ) {
+    return false;
+  }
+  if (
+    i["savingsGoalTarget"] !== null &&
+    (typeof i["savingsGoalTarget"] !== "number" ||
+      !Number.isFinite(i["savingsGoalTarget"]) ||
+      (i["savingsGoalTarget"] as number) < 0)
+  ) {
+    return false;
+  }
+  if (
+    i["horizonYears"] !== null &&
+    (typeof i["horizonYears"] !== "number" ||
+      !Number.isFinite(i["horizonYears"]) ||
+      (i["horizonYears"] as number) <= 0)
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export type Snapshot = {
   totalIncome: number;
   essentialsTotal: number;

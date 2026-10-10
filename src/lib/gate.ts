@@ -57,7 +57,3 @@ export function lock(): void {
   unlocked = false;
   clearSession();
 }
-
-export function requiredDeclarations(): number {
-  return REQUIRED_DECLARATIONS;
-}

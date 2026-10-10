@@ -5,11 +5,12 @@ import {
   createRootRouteWithContext,
   redirect,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -64,10 +65,12 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   beforeLoad: ({ location }) => {
-    // The landing page stays public. Every other route requires the
-    // in-memory declaration gate for the current visit — direct URLs,
-    // refreshes, back/forward, and internal links all pass through here.
-    if (location.pathname === "/") return;
+    // The landing page and the educational Growth Simulator / Knowledge Hub
+    // (/risk) stay public — exploring content must never require the
+    // declaration gate. Every other route requires the session-scoped gate
+    // for the current visit — direct URLs, refreshes, back/forward, and
+    // internal links all pass through here.
+    if (location.pathname === "/" || location.pathname === "/risk") return;
     if (isUnlocked()) return;
     throw redirect({ to: "/", hash: "discover" });
   },
@@ -148,8 +151,33 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Shell>
+        <ScrollToTop />
         <Outlet />
       </Shell>
     </QueryClientProvider>
   );
+}
+
+/**
+ * Scroll to the top whenever navigation lands on a different page.
+ * Router-level, no new dependencies. The built-in restoration cache is
+ * intentionally disabled (see router.tsx): it restores stale positions
+ * when revisiting a page, while this app always starts a different page
+ * at the top. Hash navigations are left alone so anchor links (e.g.
+ * /risk#knowledge-hub) keep working, and same-page re-renders never
+ * trigger a scroll.
+ */
+export function ScrollToTop() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hash = useRouterState({ select: (s) => s.location.hash });
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname, hash]);
+  return null;
 }

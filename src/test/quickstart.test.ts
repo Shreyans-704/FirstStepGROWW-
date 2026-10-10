@@ -125,18 +125,17 @@ describe("uncertainty in readiness results", () => {
 });
 
 describe("primary next steps", () => {
-  it("points learners to the knowledge hub", () => {
+  it("guides learners toward the basics first", () => {
     const r = quickAssess({ ...q, priority: "learning" });
-    expect(r.primaryStep.to).toBe("/risk");
-    expect(r.primaryStep.hash).toBe("knowledge-hub");
+    expect(r.primaryStep.title).toBe("Learn the basics first");
   });
-  it("points a small start toward flexible exploration", () => {
+  it("frames a small start as flexible exploration", () => {
     const r = quickAssess(q);
-    expect(r.primaryStep.to).toBe("/flex-sip");
+    expect(r.primaryStep.title).toBe("Explore a tiny flexible start");
   });
-  it("points safety-net users at buffer building via refinement", () => {
+  it("guides safety-net users toward buffer building", () => {
     const r = quickAssess({ ...q, buffer: "none" });
-    expect(r.primaryStep.to).toBe("/readiness");
+    expect(r.primaryStep.title).toBe("Build a starter buffer first");
   });
 });
 

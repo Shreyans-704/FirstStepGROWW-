@@ -88,6 +88,22 @@ describe("route guard", () => {
     expect(router.state.location.pathname).toBe("/");
   });
 
+  it("keeps the Growth Simulator public while locked", async () => {
+    const router = guardedRouter("/risk");
+    await router.load();
+    expect(router.state.location.pathname).toBe("/risk");
+  });
+
+  it("keeps Knowledge Hub hash navigation public while locked", async () => {
+    const router = guardedRouter("/");
+    await router.load();
+    await router.navigate({ to: "/risk", hash: "knowledge-hub" });
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe("/risk");
+      expect(router.state.location.hash).toBe("knowledge-hub");
+    });
+  });
+
   it("allows protected navigation normally after completion", async () => {
     unlock(4);
     const router = guardedRouter("/risk");
