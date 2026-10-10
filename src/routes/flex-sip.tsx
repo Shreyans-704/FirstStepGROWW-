@@ -24,7 +24,7 @@ export const Route = createFileRoute("/flex-sip")({
 function FlexSipPage() {
   return (
     <div className="grid items-start gap-7 lg:grid-cols-[43fr_57fr] lg:gap-8">
-      <div className="min-w-0">
+      <div className="min-w-0 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
         <FlexSipBuilder />
       </div>
       <div className="min-w-0">
