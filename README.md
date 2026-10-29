@@ -110,6 +110,14 @@ Demonstrated by the implementation (not validated by user research):
 | ESLint + Prettier + `tsc` | Linting, formatting, type checks |
 
 ## Getting started
+<img width="1618" height="857" alt="image" src="https://github.com/user-attachments/assets/948cd9c0-ffa9-4e66-8bf0-38fbd1d41da7" />
+<img width="1602" height="858" alt="image" src="https://github.com/user-attachments/assets/59e69aae-d47d-4cd5-ac9c-9138d3a361f9" />
+<img width="1568" height="852" alt="image" src="https://github.com/user-attachments/assets/be911ee7-09e3-4a33-b8b9-cab26e025b8f" />
+<img width="1107" height="843" alt="image" src="https://github.com/user-attachments/assets/0ff26f88-8e6c-4375-a385-34a775f8fd63" />
+<img width="1053" height="863" alt="image" src="https://github.com/user-attachments/assets/bf34fab7-cfde-49ef-8949-d340d6c35d5b" />
+<img width="1130" height="868" alt="image" src="https://github.com/user-attachments/assets/c18ca01c-a2ab-4f5e-b047-09733525c35f" />
+
+
 
 Prerequisites: [Bun](https://bun.sh) 1.4+ (this repo resolves dependencies with Bun; `npm install` is known to fail on this dependency tree). Node.js 22 is used under the hood by the toolchain.
 
